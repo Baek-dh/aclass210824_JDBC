@@ -66,8 +66,6 @@ public class JDBCBasic {
 			System.out.println(conn); // oracle.jdbc.driver.T4CConnection@258e2e41
 			
 			
-			
-			
 			// 3. DB에 전달할 SQL 구문을 작성
 			String sql = "SELECT EMP_NAME, SALARY, DEPT_CODE FROM EMPLOYEE"  ;
 			// !!! 경고 !!!
