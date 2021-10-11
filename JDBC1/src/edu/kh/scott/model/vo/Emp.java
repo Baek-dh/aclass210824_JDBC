@@ -43,6 +43,15 @@ public class Emp {
 		this.comm = comm;
 		this.deptNo = deptNo;
 	}
+	
+	// 사원 정보 수정 시 사용하는 생성자
+	public Emp(int empNo, String job, int sal, int comm) {
+		super();
+		this.empNo = empNo;
+		this.job = job;
+		this.sal = sal;
+		this.comm = comm;
+	}
 
 	//getter / setter
 	public int getEmpNo() {

@@ -333,6 +333,174 @@ public class EmpDAO {
 	}
 	
 	
+	// 4. 사번으로 사원 정보 수정
+	public int updateEmp(Emp emp) {
+		
+		// SQL 수행 후 반환된 행의 개수(결과)를 저장하고 반환하기 위한 변수 선언
+		int result = 0;
+		
+		try {
+			// DB 연결을 위한 Connection 얻어오기
+			Class.forName(driver);
+			conn = DriverManager.getConnection(url, userName, password);
+			
+			String sql = "UPDATE EMP SET JOB = ?, SAL =?, COMM =? WHERE EMPNO = ?";
+			
+			// 위치 홀더가 포함된 SQL이 담긴 PreparedStatement 생성
+			pstmt = conn.prepareStatement(sql);
+			
+			// 담긴 SQL의 위치홀더에 알맞은 값을 세팅
+			pstmt.setString(1, emp.getJob());
+			pstmt.setInt(2, emp.getSal());
+			pstmt.setInt(3, emp.getComm());
+			pstmt.setInt(4, emp.getEmpNo());
+			
+			
+			result = pstmt.executeUpdate();
+			// executeUpdate() : DML(INSERT, UPDATE, DELETE) 수행 후 성공한 행의 개수를 반환
+			// executeQuery()  : SELECT 수행 후 ResultSet 반환
+			
+			
+			// 성공 행의 개수에 따라 DML(UPDATE)내용 DB 반영 O, 반영 X 제어
+			// --> 트랜잭션 제어
+			if(result > 0) {
+				conn.commit();
+			}else {
+				conn.rollback();
+			}
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		} finally {
+			
+			// 사용한 JDBC 객체 자원 반환
+			try {
+				
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		// DB 수행 결과 반환
+		return result;
+	}
+
+	// 5. 사번으로 사원 정보 삭제
+	public int deleteEmp(int empNo) {
+		
+		// 결과 저장 및 반환용 변수 선언
+		int result = 0;
+		
+		try { // 연결 관련 예외 또는 SQL 관련 예외 발생 가능성이 있음
+			
+			// Connection 얻어오기
+			Class.forName(driver); // JAVA - Oracle DB 연결 시 필요한 JDBC드라이버 메모리 로드
+									//  -> ojdbc6.jar 라이버러리 파일에 내장되어있음.
+			conn = DriverManager.getConnection(url, userName, password);
+			
+			String sql = "DELETE FROM EMP WHERE EMPNO = ?";
+			
+			// 위치 홀더가 포함된 SQL을 담은 PreparedStatement 객체를 생성
+			pstmt = conn.prepareStatement(sql);
+			
+			// 위치 홀더에 알맞은 값 세팅
+			pstmt.setInt(1, empNo);
+			
+			// SQL 수행 후 결과 반환 받기
+			result = pstmt.executeUpdate(); // DML 수행, 성공한 행의 개수를 반환
+			
+			// 트랜잭션 제어
+			if(result > 0) 	conn.commit();
+			else			conn.rollback();
+			
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			
+		}finally { // 사용한 JDBC 객체 자원 반환
+			
+			try {
+				
+				if(pstmt != null) pstmt.close();
+				if(conn != null)  conn.close();
+				
+			}catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	
+	
+	//6. 사번, 이름이 모두 일치하는 사원 정보 조회
+	public Emp selectOne2(Emp emp) {
+		
+		// 결과 저장 및 반환용 변수 선언
+		Emp result = null;
+		
+		try {
+			// Connection 얻어오기
+			Class.forName(driver);
+			conn = DriverManager.getConnection(url, userName, password);
+			
+			// SQL 작성
+			String sql = "SELECT * FROM EMP WHERE EMPNO = ? AND ENAME = ?";
+			
+			// PreparedStatement 생성
+			pstmt = conn.prepareStatement(sql);
+			
+			// 위치 홀더에 알맞은 값 세팅
+			pstmt.setInt(1, emp.getEmpNo());
+			pstmt.setString(2, emp.geteName());
+			
+			// SQL 수행 후 결과(ResultSet)를 반환 받아 저장
+			rs = pstmt.executeQuery(); // SELECT 수행후 ResultSet 반환
+			
+			// 조회 결과가 있는지 확인하여 결과 저장용 변수에 담기
+			// -> 조회 결과가 1행만 있을 경우 if문
+			// -> 조회 결과가 1행 초과인 경우 while문 
+			
+			if(rs.next()) { // rs.next() : 조회 결과에서 다음 행이 있을 경우 true
+				int empNo = rs.getInt("EMPNO");
+				String eName = rs.getString("ENAME");
+				String job = rs.getString("JOB");
+				int mgr = rs.getInt("MGR");
+				Date hireDate = rs.getDate("HIREDATE"); // java.sql.Date
+				int sal = rs.getInt("SAL");
+				int comm = rs.getInt("COMM");
+				int deptNo = rs.getInt("DEPTNO");
+				
+				// 조회한 컬럼값을 이용하여 Emp 객체 생성 후 결과 저장용 변수 result에 저장
+				result = new Emp(empNo, eName, job, mgr, hireDate, sal, comm, deptNo);
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			
+		}finally {
+			
+			// 사용한 JDBC 객체 자원 반환
+			try {
+				
+				if( rs    != null)  rs.close();
+				if( pstmt != null)  pstmt.close();
+				if( conn  != null)  conn.close();
+				
+			}catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return result;
+	}
+	
 	
 	
 	

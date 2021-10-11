@@ -68,6 +68,32 @@ public class EmpService {
 	}
 	
 	
+	// 4. 사번으로 사원 정보 수정
+	public int updateEmp(Emp emp) {
+		
+		// 매개변수로 전달 받은 값을 DAO로 전달하고 결과를 반환 받아 저장
+		int result = dao.updateEmp(emp);
+		
+		return result;
+	}
+	
+	// 5. 사번으로 사원 정보 삭제
+	public int deleteEmp(int empNo) {
+		
+		int result = dao.deleteEmp(empNo);
+		
+		return result;
+	}
+	
+	
+	// 6. 사번, 이름이 모두 일치하는 사원 정보 조회
+	public Emp selectOne2(Emp emp) {
+		
+		// 매개변수를 DAO 메소드로 전달 후 결과 반환 받기
+		Emp result = dao.selectOne2(emp);
+		
+		return emp;
+	}
 	
 	
 	
