@@ -32,6 +32,28 @@ public class Board {
 		this.boardContent = boardContent;
 	}
 	
+	// 게시글 목록 조회 생성자
+	public Board(int boardNo, String boardTitle, String boardWriter, Date createDt, int readCount) {
+		super();
+		this.boardNo = boardNo;
+		this.boardTitle = boardTitle;
+		this.boardWriter = boardWriter;
+		this.createDt = createDt;
+		this.readCount = readCount;
+	}
+	
+	// 상세 조회용 생성자
+	public Board(int boardNo, String boardTitle, String boardContent, String boardWriter, String boardPw, Date createDt,
+			int readCount) {
+		super();
+		this.boardNo = boardNo;
+		this.boardTitle = boardTitle;
+		this.boardContent = boardContent;
+		this.boardWriter = boardWriter;
+		this.boardPw = boardPw;
+		this.createDt = createDt;
+		this.readCount = readCount;
+	}
 
 	public int getBoardNo() {
 		return boardNo;
