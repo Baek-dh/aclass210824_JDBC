@@ -17,7 +17,7 @@ public class BoardView {
 	// 메소드
 	public void displayMenu() {
 		
-		int sel = -1; // 입력된 메뉴 번호 저장용 변수
+		int sel = -1; // 입력된 메뉴 번호 저장b용 변수
 		
 		do {
 			try {
