@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.util.Properties;
 
 import edu.kh.jdbc.member.model.vo.Member;
+import edu.kh.jdbc.view.MainView;
 
 public class MemberDAO {
 
@@ -156,6 +157,71 @@ public class MemberDAO {
 			// 사용한 JDBC 객체 자원 반환
 			close(pstmt);
 			
+		}
+		
+		return result;
+	}
+
+
+	/** 내 정보 수정 DAO
+	 * @param memberPw
+	 * @param phone
+	 * @param conn
+	 * @return result (성공 1, 실패 0)
+	 * @throws Exception 
+	 */
+	public int updateMember(String memberPw, String phone, Connection conn) throws Exception {
+		
+		// 1. 결과 저장용 변수 선언
+		int result = 0;
+		
+		try {
+			// 2. SQL 얻어오기 <- Properties 객체 <- member-sql.xml 파일
+			String sql = prop.getProperty("updateMember");
+			
+			// 3. PreparedStatement 객체 생성
+			pstmt = conn.prepareStatement(sql);
+			
+			// 4. 위치 홀더에 알맞은 값 대입
+			pstmt.setString(1, memberPw);
+			pstmt.setString(2, phone);
+			pstmt.setInt(3, MainView.loginMember.getMemberNo());
+			
+			// 5. SQL 수행 후 결과 반환 받아 결과 저장용 변수에 저장
+			result = pstmt.executeUpdate();
+
+		}finally {
+			// 6. 사용한 JDBC 객체 자원 반환
+			close(pstmt);
+		}	
+		
+		// 7. 결과 리턴
+		return result;
+	}
+
+
+	/** 회원 탈퇴 DAO
+	 * @param memberPw
+	 * @param conn
+	 * @return result(성공 1, 실패 0)
+	 * @throws Exception
+	 */
+	public int deleteMember(String memberPw, Connection conn) throws Exception {
+		
+		int result = 0;
+		
+		try {
+			String sql = prop.getProperty("deleteMember");
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, MainView.loginMember.getMemberNo());
+			pstmt.setString(2, memberPw);
+			
+			result = pstmt.executeUpdate();
+			
+		}finally {
+			close(pstmt);
 		}
 		
 		return result;

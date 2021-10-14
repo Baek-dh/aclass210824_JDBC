@@ -26,11 +26,23 @@
 	</entry>
 
 
+	<!-- 내 정보 수정 SQL -->
+	<entry key="updateMember">
+		UPDATE TB_MEMBER SET
+		MEMBER_PW = ?,
+		PHONE = ?
+		WHERE MEMBER_NO = ?
+	</entry>
 
-
-
-
-
-
-
+	
+	<!-- 회원 탈퇴 SQL -->
+	<entry key="deleteMember">
+		DELETE FROM TB_MEMBER
+		WHERE MEMBER_NO = ?
+		AND MEMBER_PW = ?
+	</entry>
+	
+	
 </properties>
+
+

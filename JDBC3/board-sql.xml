@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<!-- 게시글 삽입 SQL -->
+	<entry key="insertBoard">
+		INSERT INTO TB_BOARD
+		VALUES( SEQ_BOARD_NO.NEXTVAL, ?, ?, DEFAULT, DEFAULT, ?)
+	</entry>
+
+	<!-- 로그인한 회원의 작성글이 맞는지 확인 SQL -->
+	<entry key="checkBoard">
+		SELECT COUNT(*) FROM TB_BOARD
+		WHERE BOARD_NO = ?
+		AND BOARD_WRITER = ?
+	</entry>
+
+	<!-- 게시글 수정 SQL -->
+	<entry key="updateBoard">
+		UPDATE TB_BOARD SET
+		BOARD_TITLE = ?,
+		BOARD_CONTENT = ?
+		WHERE BOARD_NO = ?
+	</entry>
+	
+
+
+
+
+	
+</properties>

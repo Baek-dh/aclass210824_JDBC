@@ -127,6 +127,82 @@ public class MemberView {
 		System.out.println("전화번호 : " + MainView.loginMember.getPhone());
 		
 	}
+
+
+	// 로그인 메뉴 2. 내 정보 수정
+	public void updateMember() {
+		
+		System.out.println("[내 정보 수정]");
+		System.out.print("수정할 비밀번호 입력 : ");
+		String memberPw = sc.nextLine();
+		
+		System.out.print("수정할 전화번호 입력 : ");
+		String phone = sc.nextLine();
+		
+		try {
+			// 내 정보 수정 Service 호출 후 결과 반환 받기
+			int result = service.updateMember(memberPw, phone);
+			
+			if(result > 0) {
+				System.out.println("회원 정보가 수정되었습니다.");
+			}else {
+				System.out.println("내 정보 수정 실패");
+			}
+			
+		}catch (Exception e) {
+			System.out.println("내 정보 수정 중 문제가 발생했습니다.");
+			e.printStackTrace();
+		}
+		
+	}
+
+
+	// 로그인 메뉴 3. 회원 탈퇴
+	public void deleteMember() {
+		
+		System.out.println("[회원 탈퇴]");
+		
+		// 1. 비밀번호 입력 받기
+		System.out.print("비밀번호 입력 : ");
+		String memberPw = sc.nextLine();
+		
+		while(true) {
+			// 2. 정말로 탈퇴 하시겠습니까? y/n
+			System.out.print("정말로 탈퇴 하시겠습니까?(y/n) : ");
+			char ch = sc.nextLine().toLowerCase().charAt(0);
+			// String.toLowerCase() : 문자열을 모두 소문자로 변경
+			// String.toUpperCase() : 문자열을 모두 대문자로 변경
+			
+			if(ch == 'y') {
+				// 탈퇴 Service 호출 후 결과 반환 받기
+				try {
+					int result = service.deleteMember(memberPw);
+					
+					if(result > 0) {
+						System.out.println("탈퇴 되었습니다.");
+						MainView.loginMember = null; // 로그아웃
+					
+					} else {
+						System.out.println("비밀번호 일치하지 않습니다.");
+					}
+					
+				}catch (Exception e) {
+					System.out.println("회원 탈퇴 중 문제가 발생했습니다.");
+					e.printStackTrace();
+				}
+				
+				
+				break;
+			} else if(ch == 'n') {
+				System.out.println("취소 되었습니다.");
+			
+				break;
+			} else {
+				System.out.println("잘못 입력 하셨습니다.");
+			}
+		}
+		
+	}
 	
 	
 	

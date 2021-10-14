@@ -11,7 +11,7 @@ public class MainView {
 	private Scanner sc = new Scanner(System.in);
 	
 	private MemberView memberView = new MemberView();
-	
+	private BoardView boardView = new BoardView();
 	
 	// 로그인된 회원 정보를 저장할 변수 선언
 	public static Member loginMember = null;
@@ -60,7 +60,14 @@ public class MainView {
 					
 					System.out.println("4. 게시글 작성");
 					System.out.println("5. 게시글 수정");
+					// 1) 게시글 번호 입력 받기
+					// 2) 입력 받은 번호의 게시글이 현재 로그인한 회원의 게시글인지 확인
+					// 3-1) 로그인한 회원의 글이 아닌 경우 -> "본인의 게시글만 수정할 수 있습니다."
+					// 3-2) 로그인한 회원의 글이 맞는 경우 
+					//		-> 제목, 내용을 입력 받아 update 진행
+					
 					System.out.println("6. 게시글 삭제");
+					
 					System.out.println("7. 게시글 목록 조회");
 					System.out.println("8. 게시글 상세");
 					System.out.println("9. 게시글 검색(제목, 내용, 작성자)");
@@ -75,12 +82,13 @@ public class MainView {
 					
 					switch(sel) {
 					case 1 : memberView.myInfo(); break; // 1. 내 정보 조회
-					case 2 : memberView.updateMember();  break; // 2.내 정보 수정(비밀번호, 전화번호)
-					case 3 : break;
+					case 2 : memberView.updateMember(); break; // 2.내 정보 수정(비밀번호, 전화번호)
+					case 3 : memberView.deleteMember(); break; // 3.회원 탈퇴
 					
-					case 4 : break;
-					case 5 : break;
-					case 6 : break;
+					case 4 : boardView.insertBoard(); break; // 4. 게시글 작성
+					case 5 : boardView.updateBoard(); break; // 5. 게시글 수정
+					
+					case 6 : boardView.deleteBoard(); break; // 6. 게시글 삭제
 					case 7 : break;
 					case 8 : break;
 					case 9 : break;
