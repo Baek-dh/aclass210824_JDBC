@@ -23,6 +23,30 @@
 		WHERE BOARD_NO = ?
 	</entry>
 	
+	<!-- 게시글 삭제 SQL -->
+	<entry key="deleteBoard">
+		DELETE FROM TB_BOARD
+		WHERE BOARD_NO = ?
+	</entry>
+	
+	
+	<!-- 게시글 상세 조회 SQL -->
+	<entry key="selectBoard">
+		SELECT BOARD_NO, BOARD_TITLE, BOARD_CONTENT,
+       		   CREATE_DT, READ_COUNT, NVL( MEMBER_NM , '탈퇴회원' ) MEMBER_NM
+		FROM TB_BOARD
+		LEFT JOIN TB_MEMBER ON(BOARD_WRITER = MEMBER_NO)
+		WHERE BOARD_NO = ?
+	</entry>
+	
+	<!-- 조회수 증가 SQL -->
+	<entry key="increaseReadCount">
+		UPDATE TB_BOARD SET
+		READ_COUNT = READ_COUNT + 1
+		WHERE BOARD_NO = ?
+	</entry>
+	
+	
 
 
 

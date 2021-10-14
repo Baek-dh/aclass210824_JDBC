@@ -87,10 +87,11 @@ public class MainView {
 					
 					case 4 : boardView.insertBoard(); break; // 4. 게시글 작성
 					case 5 : boardView.updateBoard(); break; // 5. 게시글 수정
-					
 					case 6 : boardView.deleteBoard(); break; // 6. 게시글 삭제
 					case 7 : break;
-					case 8 : break;
+					
+					case 8 : boardView.selectBoard();  break; // 8. 게시글 상세 조회
+					
 					case 9 : break;
 					
 					case 10 :   

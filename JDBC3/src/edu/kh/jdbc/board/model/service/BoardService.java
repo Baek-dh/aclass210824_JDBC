@@ -70,6 +70,64 @@ public class BoardService {
 		
 		return result;
 	}
+
+
+ 
+	/** 게시글 삭제 Service
+	 * @param boardNo
+	 * @return result (성공 1, 실패 0)
+	 * @throws Exception
+	 */
+	public int deleteBoard(int boardNo) throws Exception{
+		
+		Connection conn = getConnection();
+		
+		int result = dao.deleteBoard(boardNo, conn);
+		
+		if(result > 0)	commit(conn);
+		else			rollback(conn);
+		
+		close(conn);
+		
+		return result;
+	}
+
+
+	/** 게시글 상세 조회 Service
+	 * @param boardNo
+	 * @return board (성공 != null, 실패 == null)
+	 * @throws Exception
+	 */
+	public Board selectBoard(int boardNo) throws Exception {
+		
+		Connection conn = getConnection();
+		
+		Board board = dao.selectBoard(boardNo, conn);
+		
+		// 조회수 증가 
+		if(board != null) {
+			int result = dao.increaseReadCount(boardNo, conn);
+			
+			if(result > 0) {
+				commit(conn);
+				// DB는 조회수가 증가 했지만,
+				// 이전에 조회한 board에는 조회수가 증가되지 않음
+				// board에 있는 readCount도 1 증가
+				board.setReadCount(  board.getReadCount() + 1  );
+				
+			}else {
+				rollback(conn);
+			}
+			
+		}
+		
+		close(conn);
+		
+		return board;
+	}
+	
+	
+	
 	
 	
 	

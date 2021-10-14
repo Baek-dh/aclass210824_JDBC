@@ -124,6 +124,106 @@ public class BoardDAO {
 		
 		return result;
 	}
+
+
+	/** 게시글 삭제 DAO
+	 * @param boardNo
+	 * @param conn
+	 * @return result(성공 1, 실패 0)
+	 * @throws Exception
+	 */
+	public int deleteBoard(int boardNo, Connection conn) throws Exception {
+		
+		int result = 0;
+		
+		try {
+			String sql = prop.getProperty("deleteBoard");
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, boardNo);
+			
+			result = pstmt.executeUpdate();
+			
+		}finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
+
+	/** 게시글 상세 조회 DAO
+	 * @param boardNo
+	 * @param conn
+	 * @return board (성공 != null, 실패 == null)
+	 * @throws Exception
+	 */
+	public Board selectBoard(int boardNo, Connection conn) throws Exception{
+		
+		Board board = null; // 결과 저장용 변수
+		
+		try {
+			String sql = prop.getProperty("selectBoard");
+		
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, boardNo);
+			
+			rs = pstmt.executeQuery();
+			
+			if( rs.next() ) {
+				// 컬럼값을 이용하여 객체 생성
+				
+				board = new Board();
+				
+				board.setBoardNo( rs.getInt("BOARD_NO") );
+				board.setBoardTitle( rs.getString("BOARD_TITLE")  );
+				board.setBoardContent( rs.getString("BOARD_CONTENT") );
+				board.setCreateDt(  rs.getDate("CREATE_DT")  );
+				board.setReadCount( rs.getInt("READ_COUNT") );
+				board.setMemberNm( rs.getString("MEMBER_NM") );
+			}
+			
+			
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		
+		return board;
+	}
+	
+	
+	
+	/** 조회수 증가 DAO
+	 * @param boardNo
+	 * @param conn
+	 * @return result (성공 1, 실패 0)
+	 * @throws Exception
+	 */
+	public int increaseReadCount(int boardNo, Connection conn) throws Exception {
+		
+		int result = 0;
+		
+		try {
+			String sql = prop.getProperty("increaseReadCount");
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, boardNo);
+			
+			result = pstmt.executeUpdate();
+			
+		}finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+	
+	
+	
 	
 	
 	

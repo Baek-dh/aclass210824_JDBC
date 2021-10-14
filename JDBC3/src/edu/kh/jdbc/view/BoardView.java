@@ -134,14 +134,85 @@ public class BoardView {
 	public void deleteBoard() {
 		System.out.println("[게시글 삭제]");
 		
-		// 1) 본인 글이 맞는지 확인
-		// 2-1) 아닐 경우 -> "작성한 글만 삭제할 수 있습니다."
-		// 2-2) 맞을 경우 -> "정말로 삭제하시겠습니까?(y/n)" 
+		try {
+			// 1) 본인 글이 맞는지 확인
+			int boardNo = checkBoard(); // 아니면 0, 맞으면 게시글 번호
+			
+			// 2-1) 아닐 경우 -> "작성한 글만 삭제할 수 있습니다."
+			if(boardNo == 0) {
+				System.out.println("작성한 글만 삭제할 수 있습니다.");
+			
+			} else {
+				// 2-2) 맞을 경우 -> "정말로 삭제하시겠습니까?(y/n)" 
+				
+				// 3) 'n'이면 취소
+				//    'y'이면 삭제 -> "삭제 성공" / "삭제 실패"
+				//    잘못 입력하는 경우 "잘못 입력하셨습니다. 다시 입력해주세요" 
+				//		-> y/n이 입력될 때 까지 무한 반복
+				while(true) {
+					
+					System.out.print("정말로 삭제하시겠습니까?(y/n) : " );
+					char ch = sc.nextLine().toUpperCase().charAt(0);
+					
+					if(ch == 'N') {
+						System.out.println("삭제 취소");
+						
+						break;
+						
+					}else if( ch == 'Y'){
+						// 삭제 Service 호출
+						
+						int result = service.deleteBoard(boardNo);
+						
+						if(result > 0) {
+							System.out.println("삭제 성공");
+						}else {
+							System.out.println("삭제 실패");
+						}
+						
+						
+						break;
+					} else {
+						System.out.println("잘못 입력하셨습니다. 다시 입력해주세요" );
+					}
+					
+				}
+				
+				
+			}
+			
+		}catch (Exception e) {
+			System.out.println("게시글 삭제 중 문제가 발생했습니다.");
+			e.printStackTrace();
+		}
+	}
+
+	
+	// 로그인 메뉴 8. 게시글 상세 조회
+	public void selectBoard() {
 		
-		// 3) 'n'이면 취소
-		//    'y'이면 삭제 -> "삭제 성공" / "삭제 실패"
-		//    잘못 입력하는 경우 "잘못 입력하셨습니다. 다시 입력해주세요" 
-		//		-> y/n이 입력될 때 까지 무한 반복
+		System.out.println("[게시글 상세 조회]");
+		
+		System.out.print("게시글 번호 입력 : ");
+		int boardNo = sc.nextInt();
+		sc.nextLine();
+		
+		try {
+			Board board = service.selectBoard(boardNo);
+			
+			if(board != null) { // 게시글 상세 조회 성공
+				System.out.println(board);
+			}else {
+				System.out.println("존재하지 않는 게시글 번호입니다.");
+			}
+			
+			
+		}catch (Exception e) {
+			System.out.println("게시글 상세 조회 중 문제가 발생했습니다.");
+			e.printStackTrace();
+		}
+		
+		
 		
 	}
 	
