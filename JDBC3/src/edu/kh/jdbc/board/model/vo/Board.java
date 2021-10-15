@@ -14,6 +14,19 @@ public class Board {
 	
 	public Board() {} 	// 기본생성자
 
+	// 목록 조회용 생성자
+	public Board(int boardNo, String boardTitle, Date createDt, int readCount, String memberNm) {
+		super();
+		this.boardNo = boardNo;
+		this.boardTitle = boardTitle;
+		this.createDt = createDt;
+		this.readCount = readCount;
+		this.memberNm = memberNm;
+	}
+
+
+
+
 	// getter/setter
 	public int getBoardNo() {
 		return boardNo;

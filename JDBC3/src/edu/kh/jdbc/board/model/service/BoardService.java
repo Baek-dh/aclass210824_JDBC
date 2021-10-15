@@ -3,6 +3,7 @@ package edu.kh.jdbc.board.model.service;
 import static edu.kh.jdbc.common.JDBCTemplate.*;
 
 import java.sql.Connection;
+import java.util.List;
 
 import edu.kh.jdbc.board.model.dao.BoardDAO;
 import edu.kh.jdbc.board.model.vo.Board;
@@ -124,6 +125,48 @@ public class BoardService {
 		close(conn);
 		
 		return board;
+	}
+
+
+
+	/** 게시글 목록 조회 Service
+	 * @return boardList
+	 * @throws Exception
+	 */
+	public List<Board> selectBoardList() throws Exception{
+
+		// 1. Connection 얻어오기 -> JDBCTemplate.getConnection() 
+		//						  --> Oracle JDBC Driver 메모리 로드 
+		//							  + url, userName, password를 이용해 Connection 얻어오기
+		Connection conn = getConnection();
+		
+		// 2. 게시글 목록 조회 DAO 메소드 호출 -> 결과 반환 받기
+		List<Board> boardList = dao.selectBoardList(conn);
+		
+		// 3. Connection 반환
+		close(conn);
+		
+		// 4. 결과 반환
+		return boardList;
+	}
+
+
+
+	/** 게시글 검색 Service
+	 * @param searchKey
+	 * @param searchValue
+	 * @return searchList
+	 * @throws Exception
+	 */
+	public List<Board> searchList(int searchKey, String searchValue) throws Exception{
+		
+		Connection conn = getConnection();
+		
+		List<Board> searchList = dao.searchList(searchKey, searchValue, conn);
+		
+		close(conn);
+		
+		return searchList;
 	}
 	
 	

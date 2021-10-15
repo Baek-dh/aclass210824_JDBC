@@ -46,7 +46,46 @@
 		WHERE BOARD_NO = ?
 	</entry>
 	
+	<!-- 게시글 목록 조회 SQL -->
+	<entry key="selectBoardList">
+		SELECT BOARD_NO, BOARD_TITLE, CREATE_DT, READ_COUNT, NVL( MEMBER_NM , '탈퇴회원') MEMBER_NM
+		FROM TB_BOARD
+		LEFT JOIN TB_MEMBER ON(BOARD_WRITER = MEMBER_NO) 
+		ORDER BY BOARD_NO DESC
+	</entry>
 	
+	
+	<!-- 게시글 검색 SQL -->
+	<entry key="searchList">
+		SELECT BOARD_NO, BOARD_TITLE, CREATE_DT, READ_COUNT, NVL( MEMBER_NM , '탈퇴회원') MEMBER_NM
+		FROM TB_BOARD
+		LEFT JOIN TB_MEMBER ON(BOARD_WRITER = MEMBER_NO) 
+	</entry>
+	
+	<!-- 제목 검색 조건 -->
+	<entry key="title">
+		WHERE BOARD_TITLE LIKE '%' || ? || '%'  
+		ORDER BY BOARD_NO DESC
+	</entry>
+	
+	<!-- 내용 검색 조건 -->
+	<entry key="content">
+		WHERE BOARD_CONTENT LIKE '%' || ? || '%'  
+		ORDER BY BOARD_NO DESC
+	</entry>
+	
+	<!-- 제목+내용 검색 조건 -->
+	<entry key="title_content">
+		WHERE BOARD_TITLE LIKE '%' || ? || '%' 
+		OR    BOARD_CONTENT LIKE '%' || ? || '%'  
+		ORDER BY BOARD_NO DESC
+	</entry>
+
+	<!-- 작성자 검색 조건 -->
+	<entry key="writer">
+		WHERE MEMBER_NM = ?
+		ORDER BY BOARD_NO DESC
+	</entry>
 
 
 

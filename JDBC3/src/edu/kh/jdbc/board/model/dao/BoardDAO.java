@@ -4,9 +4,12 @@ import static edu.kh.jdbc.common.JDBCTemplate.*;
 
 import java.io.FileInputStream;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import edu.kh.jdbc.board.model.vo.Board;
@@ -221,10 +224,123 @@ public class BoardDAO {
 		
 		return result;
 	}
-	
-	
-	
-	
+
+
+	/** 게시글 목록 조회 DAO
+	 * @param conn
+	 * @return boardList
+	 * @throws Exception
+	 */
+	public List<Board> selectBoardList(Connection conn) throws Exception{
+		
+		// 1. 결과 저장용 변수 선언
+		List<Board> boardList = new ArrayList<Board>();
+		
+		try {
+			// 2. SQL 얻어오기
+			// -> BoardDAO 객체 생성 시 board-sql.xml파일의 내용을 읽어와
+			//    Properties 객체에 저장
+			//    --> Properties 객체에 저장된 내용을 얻어와 사용
+			String sql = prop.getProperty("selectBoardList");
+			
+			// * SQL에 위치홀더(?) 없을 경우 -> Statement
+			// * SQL에 위치홀더(?) 있을 경우 -> PreparedStatement
+			
+			// 3. Statement 객체 생성
+			stmt = conn.createStatement();
+			
+			// 4. Statement에 SQL 적재 -> 바로 SQL 수행 -> 결과(ResultSet) 반환 받기
+			rs = stmt.executeQuery(sql);
+			
+			// 5. 조회 결과에서 커서를 이용해 한 행씩 접근하여 컬럼 값 얻어오기
+			while( rs.next() ) {
+				
+				// 6. 컬럼 값을 얻어와 Board 객체에 저장 후 boardList에 추가
+				int boardNo = rs.getInt("BOARD_NO");
+				String boardTitle = rs.getString("BOARD_TITLE");
+				Date createDt = rs.getDate("CREATE_DT");
+				int readCount = rs.getInt("READ_COUNT");
+				String memberNm = rs.getString("MEMBER_NM");
+				
+				Board board = new Board(boardNo, boardTitle, createDt, readCount, memberNm);
+				
+				boardList.add(board);
+			}
+			
+		}finally {
+			// 7. 사용한 JDBC 객체 자원 반환
+			close(rs);
+			close(stmt);
+		}
+		
+		return boardList;
+	}
+
+
+	/** 게시글 검색 DAO
+	 * @param searchKey
+	 * @param searchValue
+	 * @param conn
+	 * @return searchList
+	 * @throws Exception
+	 */
+	public List<Board> searchList(int searchKey, String searchValue, Connection conn) throws Exception {
+		
+		List<Board> searchList = new ArrayList<>();
+										// 타입 추론
+		
+		try {
+			// SQL 얻어오기 
+			// SELECT + FROM절 부분
+			String sql1 = prop.getProperty("searchList");
+			
+			// WHERE + ORDER BY 절 부분
+			String sql2 = null;
+			
+			switch(searchKey) {
+			case 1: sql2 = prop.getProperty("title"); break;
+			case 2: sql2 = prop.getProperty("content"); break;
+			case 3: sql2 = prop.getProperty("title_content"); break;
+			case 4: sql2 = prop.getProperty("writer"); break;
+			}
+			
+			String sql = sql1 + sql2;
+			
+			
+			
+			// PreparedStatement 객체 생성
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, searchValue);
+			
+			if( searchKey == 3 ) { // 제목 + 내용 검색일 경우 위치홀더가 2개이므로 2번째를 세팅
+				pstmt.setString(2, searchValue);
+			}
+			
+			// SQL 수행 후 결과 반환 받기
+			rs = pstmt.executeQuery();
+			
+			// 조회 결과를 searchList에 옮겨 담기
+			while( rs.next() ) {
+				
+				int boardNo = rs.getInt("BOARD_NO");
+				String boardTitle = rs.getString("BOARD_TITLE");
+				Date createDt = rs.getDate("CREATE_DT");
+				int readCount = rs.getInt("READ_COUNT");
+				String memberNm = rs.getString("MEMBER_NM");
+				
+				Board board = new Board(boardNo, boardTitle, createDt, readCount, memberNm);
+				
+				searchList.add(board);
+			}
+			
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		
+		return searchList;
+	}
 	
 	
 }

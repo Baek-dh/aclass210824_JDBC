@@ -70,7 +70,7 @@ public class MainView {
 					
 					System.out.println("7. 게시글 목록 조회");
 					System.out.println("8. 게시글 상세");
-					System.out.println("9. 게시글 검색(제목, 내용, 작성자)");
+					System.out.println("9. 게시글 검색(제목, 내용, 제목+내용, 작성자)");
 					
 					System.out.println("10. 로그아웃");
 					
@@ -88,11 +88,10 @@ public class MainView {
 					case 4 : boardView.insertBoard(); break; // 4. 게시글 작성
 					case 5 : boardView.updateBoard(); break; // 5. 게시글 수정
 					case 6 : boardView.deleteBoard(); break; // 6. 게시글 삭제
-					case 7 : break;
-					
+					case 7 : boardView.selectBoardList(); break; // 7. 게시글 목록 조회
 					case 8 : boardView.selectBoard();  break; // 8. 게시글 상세 조회
 					
-					case 9 : break;
+					case 9 : boardView.serachBoard(); break; // 9. 게시글 검색
 					
 					case 10 :   
 						System.out.println("로그아웃 되었습니다...");

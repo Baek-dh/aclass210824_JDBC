@@ -1,5 +1,6 @@
 package edu.kh.jdbc.view;
 
+import java.util.List;
 import java.util.Scanner;
 
 import edu.kh.jdbc.board.model.service.BoardService;
@@ -202,6 +203,18 @@ public class BoardView {
 			
 			if(board != null) { // 게시글 상세 조회 성공
 				System.out.println(board);
+				
+				System.out.printf("--------------------------------------\n"
+								+ "[%d]   %s\n"
+								+ "--------------------------------------\n"
+								+ "작성일 : %s  | 조회수 : %d\n"
+								+ "--------------------------------------\n"
+								+ "%s\n"
+								+ "--------------------------------------\n",
+								board.getBoardNo(), board.getBoardTitle(),
+								board.getCreateDt().toString(), board.getReadCount(),
+								board.getBoardContent());
+				
 			}else {
 				System.out.println("존재하지 않는 게시글 번호입니다.");
 			}
@@ -212,6 +225,93 @@ public class BoardView {
 			e.printStackTrace();
 		}
 		
+		
+		
+	}
+
+	
+	// 게시글 목록 출력 메소드
+	private void printBoardList(List<Board> boardList) {
+		
+		if(boardList.isEmpty()) { // boardList가 비어있다 == 조회 결과가 없다 == 게시글이 없다
+			System.out.println("조회 결과가 없습니다.");
+		} else {
+
+			
+ 			
+			System.out.printf("번호             제목           조회수  작성자  작성일\n"
+							+ "------------------------------------------------------\n");
+			
+			// 향상된 for문
+			for( Board board  : boardList  ) {
+				
+				System.out.printf("%2d %15s %15d %5s %s\n",
+								  board.getBoardNo(), board.getBoardTitle(),
+								  board.getReadCount(), board.getMemberNm(), 
+								  board.getCreateDt().toString());
+			}
+			
+		}
+		
+	}
+	
+	
+	// 로그인 메뉴 7. 게시글 목록 조회
+	public void selectBoardList() {
+
+		System.out.println("[게시글 목록 조회]");
+		
+		try {
+			// 게시글 목록 조회 service 호출 -> 결과 반환 받기
+			//List<Board> boardList = service.selectBoardList();
+			//printBoardList(boardList);
+			
+			printBoardList(service.selectBoardList());
+			
+		}catch (Exception e) {
+			System.out.println("게시글 목록 조회 중 문제가 발생했습니다.");
+			e.printStackTrace();
+		}
+	
+	}
+
+	
+	// 로그인 메뉴 9. 게시글 검색
+	public void serachBoard() {
+		
+		System.out.println("[게시글 검색]");
+		
+		int searchKey = 0;
+		while(true) {
+			// 1. 제목, 내용, 제목+내용, 작성자 중 어떤 검색을 할 것인지 선택
+			System.out.println("1. 제목 | 2. 내용 | 3. 제목+내용 | 4. 작성자");
+			System.out.print("검색 카테고리 선택 : ");
+			searchKey = sc.nextInt();
+			sc.nextLine();
+			
+			if(searchKey >= 1 && searchKey <= 4) {
+				break;
+			}else {
+				System.out.println("1~4 사이 번호만 입력해주세요.");
+			}
+		}
+		
+		
+		// 2. 검색어 입력
+		System.out.print("검색어 입력 : ");
+		String searchValue = sc.nextLine();
+		
+		// 3. 게시글 검색 Service 호출 -> 결과 반환
+		try {
+			List<Board> searchList = service.searchList(searchKey, searchValue);
+			
+			// 4. printBoardList() 메소드를 이용해서 출력
+			printBoardList(searchList);
+			
+		} catch (Exception e) {
+			System.out.println("게시글 검색 중 문제가 발생했습니다.");
+			e.printStackTrace();
+		}
 		
 		
 	}
